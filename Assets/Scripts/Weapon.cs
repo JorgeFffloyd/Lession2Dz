@@ -11,17 +11,17 @@ public class Weapon
 { 
    
 
-    public string Name;
-    public int BaseDamage;
+    public string name;
+    public int baseDamage;
     public Element elementWeapon;
 
    
 
     public Weapon(string name, int baseDamage, Element element)
     {
-        Name = name;
-        BaseDamage = baseDamage;
-        elementWeapon = element;
+        this.name = name;
+        this.baseDamage = baseDamage;
+        this.elementWeapon = element;
     }
     /*
     public int GetPower()
@@ -31,12 +31,12 @@ public class Weapon
         
         if (Element != Element.None)
         {
-            power += 5;
+            power += 1;
         }
 
         return power;
     }
-    Неиспользуемый метод
+    Ждёт своего часа
     */
 }
 

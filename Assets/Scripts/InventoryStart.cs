@@ -1,31 +1,31 @@
 using UnityEngine;
 public class InventoryStart : MonoBehaviour
 {
-    private Inventory myInventory;
+    private Inventory m_inventory;
 
     void Start()
     {
-        myInventory = new Inventory();
+        m_inventory = new Inventory();
 
-        myInventory.AddItem("Меч");
-        myInventory.AddItem("Щит");
+        m_inventory.AddItem("Меч");
+        m_inventory.AddItem("Щит");
 
-        myInventory.AddItem("Меч");
-        myInventory.AddItem("Зелье", 3);
+        m_inventory.AddItem("Меч");
+        m_inventory.AddItem("Зелье", 3);
 
-        myInventory.RemoveItem("Лук"); 
+        m_inventory.RemoveItem("Лук"); 
 
-        myInventory.AddItem("Палка");
-        myInventory.AddItem("Яблоко");
-        myInventory.AddItem("Сыр");
-        myInventory.AddItem("Шкарпэтки");
-        myInventory.AddItem("Печенье бамбук");
-        myInventory.AddItem("Козье копыто");
+        m_inventory.AddItem("Палка");
+        m_inventory.AddItem("Яблоко");
+        m_inventory.AddItem("Сыр");
+        m_inventory.AddItem("Шкарпэтки");
+        m_inventory.AddItem("Печенье бамбук");
+        m_inventory.AddItem("Козье копыто");
 
-        myInventory.AddItem("Фингерборд");
-        myInventory.AddItem("Фингерборд(покруче)");
+        m_inventory.AddItem("Фингерборд");
+        m_inventory.AddItem("Фингерборд(покруче)");
 
-        myInventory.Print();
+        m_inventory.Print();
 
     }
 
