@@ -1,47 +1,33 @@
 using UnityEngine;
 
-public class UnitPlus
+public class UnitPlus : Unit
 {
-    public string Name;
-    public int Health;
-    public int MinDamage;
-    public int MaxDamage;
-    public int Armor;
-    public Element MyElement;
-    public float CritChance;
+    public int Armor { get; private set; }
+    public float CritChance { get; private set; }
+    public Weapon EquippedWeapon { get; set; }
+    public WeaponBag Bag { get; private set; }
 
-    public Inventory MyInventory = new Inventory();
-
-    public UnitPlus(string name, int hp, int minD, int maxD, int armor, Element element, float crit)
+    public UnitPlus(string name, int hp, int armor, float crit) : base(name, hp, 0, 0)
     {
-        Name = name;
-        Health = hp;
-        MinDamage = minD;
-        MaxDamage = maxD;
         Armor = armor;
-        MyElement = element;
         CritChance = crit;
-    }
-
-    public bool IsAlive()
-    {
-        return Health > 0;
+        Bag = new WeaponBag();
     }
 
     public void Attack(UnitPlus target)
     {
-        int finalDmg = Random.Range(MinDamage, MaxDamage + 1);
+        int baseDmg = EquippedWeapon != null ? EquippedWeapon.BaseDamage : 1;
+        Element myElem = EquippedWeapon != null ? EquippedWeapon.elementWeapon : Element.None;
+        Element targetElem = target.EquippedWeapon != null ? target.EquippedWeapon.elementWeapon : Element.None;
 
-        finalDmg = finalDmg - target.Armor;
+        int finalDmg = baseDmg - target.Armor;
         if (finalDmg < 1) finalDmg = 1;
-        //  стихиха
-        if (MyElement != Element.None && target.MyElement != Element.None)
+
+        if (myElem != Element.None && targetElem != Element.None)
         {
-            if (MyElement == target.MyElement)
+            if (myElem == targetElem)
             {
                 finalDmg = 0;
-                Debug.Log($"{Name} атакует {target.Name}, одинаковые стихии");
-                return;
             }
             else
             {
@@ -49,17 +35,13 @@ public class UnitPlus
             }
         }
 
-        bool isCrit = false;
-        if (Random.value < CritChance)
+        if (finalDmg > 0 && Random.value < CritChance)
         {
             finalDmg *= 2;
-            isCrit = true;
         }
 
-        target.Health -= finalDmg;
-        if (target.Health < 0) target.Health = 0;
+        target.TakeDamage(finalDmg);
 
-        string critText = isCrit ? "(крит)" : "";
-        Debug.Log($"{Name} наносит {finalDmg} урона {target.Name} {critText}. осталось хзп: {target.Health}");
+        Debug.Log($"{Name} бьет {target.Name} на {finalDmg} урона. У цели {target.Health} HP");
     }
 }

@@ -3,85 +3,82 @@ using UnityEngine;
 
 public class groupArena : MonoBehaviour
 {
+    [SerializeField] private int maxRounds = 20; 
+
     private List<UnitPlus> heroes = new List<UnitPlus>();
     private List<UnitPlus> enemies = new List<UnitPlus>();
 
     void Awake()
     {
-        UnitPlus warrior = new UnitPlus("Воин", 100, 10, 16, 5, Element.Ice, 0.3f);
-        warrior.MyInventory.AddItem("Меч");
+
+        UnitPlus warrior = new UnitPlus("Воин", 100, 5, 0.2f);
+        Weapon sword = new Weapon("Меч", 15, Element.Fire);
+        warrior.Bag.Add(sword);
+        warrior.EquippedWeapon = sword;
         heroes.Add(warrior);
 
-        UnitPlus mage = new UnitPlus("Маг", 80, 6, 12, 2, Element.Fire, 0.3f);
-        mage.MyInventory.AddItem("Посох");
+        UnitPlus mage = new UnitPlus("Маг", 80, 2, 0.3f);
+        Weapon staff = new Weapon("Посох", 12, Element.Ice);
+        mage.Bag.Add(staff);
+        mage.EquippedWeapon = staff;
         heroes.Add(mage);
 
-        UnitPlus ork = new UnitPlus("Орк 1", 80, 5, 10, 3, Element.Ice, 0.2f);
-        ork.MyInventory.AddItem("Топор");
-        enemies.Add(ork);
 
-        UnitPlus goblin = new UnitPlus("Гоблин", 50, 4, 8, 0, Element.Fire, 0.1f);
-        enemies.Add(goblin);
+        UnitPlus orc = new UnitPlus("Орк", 80, 3, 0.1f);
+        Weapon axe = new Weapon("Топор", 10, Element.None);
+        orc.Bag.Add(axe);
+        orc.EquippedWeapon = axe;
+        enemies.Add(orc);
     }
 
     void Start()
     {
-        
-        while (heroes.Exists(hero => hero.IsAlive()) && enemies.Exists(enemy => enemy.IsAlive()))
+        int round = 0;
+        while (heroes.Exists(h => h.IsAlive()) && enemies.Exists(e => e.IsAlive()) && round < maxRounds)
         {
+            round++;
+            Debug.Log($" Раунод номер:{round}");
+
             foreach (var hero in heroes)
             {
                 if (!hero.IsAlive()) continue;
-
-                UnitPlus target = enemies.Find(enemy => enemy.IsAlive());
-                if (target != null) { 
-                    hero.Attack(target); 
-                    if (!target.IsAlive())
-                    {
-                        Debug.Log($"{target.Name} Мертв");
-                       // if (target.Element == Element.Fire && enemy)
-                            LootInventory(target, hero);
-                       // else
-                          //  Debug.Log("Нет смысла");
-                        
-                    }
+                var target = enemies.Find(e => e.IsAlive());
+                if (target != null)
+                {
+                    hero.Attack(target);
+                    if (!target.IsAlive()) Loot(target, hero);
                 }
             }
 
-            // ход2
             foreach (var enemy in enemies)
             {
                 if (!enemy.IsAlive()) continue;
-
-                UnitPlus target = heroes.Find(hero => hero.IsAlive());
+                var target = heroes.Find(h => h.IsAlive());
                 if (target != null)
                 {
                     enemy.Attack(target);
-
-                    if (!target.IsAlive())
-                    {
-                        Debug.Log($"{target.Name} мертв");
-                        LootInventory(target, enemy); 
-                    }
+                    if (!target.IsAlive()) Loot(target, enemy);
                 }
             }
         }
 
-
-        if (heroes.Exists(hero => hero.IsAlive()))
-            Debug.Log("Победа");
+      
+        if (heroes.Exists(h => h.IsAlive()) && !enemies.Exists(e => e.IsAlive()))
+            Debug.Log("победа!");
+        else if (!heroes.Exists(h => h.IsAlive()) && enemies.Exists(e => e.IsAlive()))
+            Debug.Log("поражение!");
         else
-            Debug.Log("Поражение");
+            Debug.Log("Время вышло. Ничья");
     }
 
-    private void LootInventory(UnitPlus deadUnit, UnitPlus looter)
+    private void Loot(UnitPlus dead, UnitPlus looter)
     {
-        var deadManItems = deadUnit.MyInventory.GetItems();
-
-        foreach (var pair in deadManItems)
+        Debug.Log($"{dead.Name} погиб. Забираем лут.");
+        List<Weapon> items = dead.Bag.GetAll();
+        foreach (var w in items)
         {
-            looter.myInventory.AddItem(pair.Key, pair.Value);
-            Debug.Log($"{looter.Name} подобрал {pair.Key} x{pair.Value} с тела {deadUnit.Name}");
+            looter.Bag.Add(w);
+            if (looter.EquippedWeapon == null) looter.EquippedWeapon = w; 
         }
     }
 }

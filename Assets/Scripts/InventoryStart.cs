@@ -10,10 +10,10 @@ public class InventoryStart : MonoBehaviour
         myInventory.AddItem("Меч");
         myInventory.AddItem("Щит");
 
-        myInventory.AddItem("Меч");//стакак
-        myInventory.AddItem("Зелье", 3);// количественая проверка
+        myInventory.AddItem("Меч");
+        myInventory.AddItem("Зелье", 3);
 
-        myInventory.RemoveItem("Лук"); // удаление отст предмета
+        myInventory.RemoveItem("Лук"); 
 
         myInventory.AddItem("Палка");
         myInventory.AddItem("Яблоко");
@@ -23,13 +23,12 @@ public class InventoryStart : MonoBehaviour
         myInventory.AddItem("Козье копыто");
 
         myInventory.AddItem("Фингерборд");
-        myInventory.AddItem("Фингерборд(покруче)");//ошибка
+        myInventory.AddItem("Фингерборд(покруче)");
 
-        myInventory.Print();//инвентарь
+        myInventory.Print();
 
     }
 
-    // Update is called once per frame
     void Update()
     {
         
